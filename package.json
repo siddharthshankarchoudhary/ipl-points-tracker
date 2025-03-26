@@ -2,7 +2,7 @@
   "name": "ipl-points-tracker",
   "private": true,
   "version": "0.1.",
-  "homepage": "https://SiddharthShankarChoudhary.github.io/ipl-points-tracker",
+  "homepage": "https://siddharthshankarchoudhary.github.io/ipl-points-tracker",
   "type": "module",
   "scripts": {
     "predeploy": "npm run build",
