@@ -2,7 +2,16 @@ import { useState, useEffect } from "react";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from "@mui/material";
 
-const data = [
+// Define Type for Match Data
+interface MatchData {
+  Match: string;
+  Arvind: number;
+  Nirvikar: number;
+  Siddharth: number;
+}
+
+// Data for matches
+const data: MatchData[] = [
   { Match: "", Arvind: 0, Nirvikar: 0, Siddharth: 0 },
   { Match: "KKR vs RCB", Arvind: 10, Nirvikar: -10, Siddharth: -10 },
   { Match: "SRH vs RR", Arvind: 20, Nirvikar: -20, Siddharth: 0 },
@@ -12,16 +21,17 @@ const data = [
   { Match: "RR vs KKR", Arvind: 20, Nirvikar: -10, Siddharth: 0 },
 ];
 
-const latestScores = data[data.length - 1];
+const latestScores = Object.fromEntries(
+  Object.entries(data[data.length - 1]).filter(([key]) => key !== "Match")
+) as Record<keyof Omit<MatchData, "Match">, number>;
 
-// Sorting players by their latest scores in descending order
-const sortedPlayers = Object.keys(latestScores)
-  .filter((key) => key !== "Match")
+const sortedPlayers = (Object.keys(latestScores) as Array<keyof Omit<MatchData, "Match">>)
   .map((name) => ({ name, score: latestScores[name] }))
   .sort((a, b) => b.score - a.score);
 
+
 const GameScoreChart = () => {
-  const [chartWidth, setChartWidth] = useState(window.innerWidth * 0.9);
+  const [chartWidth, setChartWidth] = useState<number>(window.innerWidth * 0.9);
 
   useEffect(() => {
     const handleResize = () => setChartWidth(window.innerWidth * 0.9);
@@ -33,19 +43,10 @@ const GameScoreChart = () => {
     <div style={{ fontFamily: "Inter, sans-serif", backgroundColor: "#f5f7fa", minHeight: "100vh", padding: "20px" }}>
       <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
 
-        {/* Current Points Section - Sorted */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "20px",
-            marginBottom: "20px",
-            flexWrap: "wrap",
-          }}
-        >
+        <div style={{ display: "flex", justifyContent: "center", gap: "20px", marginBottom: "20px", flexWrap: "wrap" }}>
           {sortedPlayers.map((player, index) => (
             <div
-              key={index}
+              key={player.name}
               style={{
                 backgroundColor: "white",
                 borderRadius: "12px",
@@ -65,13 +66,7 @@ const GameScoreChart = () => {
               >
                 {player.name}
               </Typography>
-              <Typography
-                variant="h4"
-                sx={{
-                  fontWeight: "800",
-                  color: "#333",
-                }}
-              >
+              <Typography variant="h4" sx={{ fontWeight: "800", color: "#333" }}>
                 {player.score}
               </Typography>
             </div>
@@ -89,7 +84,7 @@ const GameScoreChart = () => {
               },
             ]}
             series={sortedPlayers.map((player, index) => ({
-              data: data.map((d) => d[player.name]),
+              data: data.map((d) => d[player.name]), // Type-safe key access
               label: player.name,
               color: index === 0 ? "#ff6b6b" : index === 1 ? "#6a89cc" : "#78e08f",
             }))}
@@ -116,8 +111,8 @@ const GameScoreChart = () => {
             <TableHead>
               <TableRow sx={{ backgroundColor: "#fff3e0" }}>
                 <TableCell align="center" sx={{ fontWeight: "bold" }}>Match</TableCell>
-                {sortedPlayers.map((player, index) => (
-                  <TableCell key={index} align="center" sx={{ fontWeight: "bold" }}>
+                {sortedPlayers.map((player) => (
+                  <TableCell key={player.name} align="center" sx={{ fontWeight: "bold" }}>
                     {player.name}
                   </TableCell>
                 ))}
@@ -134,8 +129,8 @@ const GameScoreChart = () => {
                   }}
                 >
                   <TableCell align="center">{row.Match || "Initial"}</TableCell>
-                  {sortedPlayers.map((player, i) => (
-                    <TableCell key={i} align="center">{row[player.name]}</TableCell>
+                  {sortedPlayers.map((player) => (
+                    <TableCell key={player.name} align="center">{row[player.name]}</TableCell>
                   ))}
                 </TableRow>
               ))}
