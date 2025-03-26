@@ -1,7 +1,8 @@
 {
   "name": "ipl-points-tracker",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.",
+  "homepage": "https://SiddharthShankarChoudhary.github.io/react-gh-pages",
   "type": "module",
   "scripts": {
     "dev": "vite",
