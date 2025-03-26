@@ -52,33 +52,43 @@ const GameScoreChart = () => {
       <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
 
         <div style={{ display: "flex", justifyContent: "center", gap: "20px", marginBottom: "20px", flexWrap: "wrap" }}>
-          {sortedPlayers.map((player, index) => (
-            <div
-              key={player.name}
-              style={{
-                backgroundColor: "white",
-                borderRadius: "12px",
-                padding: "15px 25px",
-                boxShadow: "0px 6px 15px rgba(0,0,0,0.1)",
-                textAlign: "center",
-                minWidth: "120px",
-                transition: "transform 0.2s",
-              }}
-            >
-              <Typography
-                variant="h6"
-                sx={{
-                  fontWeight: "700",
-                  color: index === 0 ? "#ff6b6b" : index === 1 ? "#6a89cc" : "#78e08f",
-                }}
-              >
-                {player.name}
-              </Typography>
-              <Typography variant="h4" sx={{ fontWeight: "800", color: "#333" }}>
-                {player.score}
-              </Typography>
-            </div>
-          ))}
+        {sortedPlayers.map((player, index) => (
+        <div
+          key={player.name}
+          style={{
+            backgroundColor: "white",
+            borderRadius: "12px",
+            padding: "15px 25px",
+            boxShadow: "0px 6px 15px rgba(0,0,0,0.1)",
+            textAlign: "center",
+            minWidth: "120px",
+            transition: "transform 0.2s",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          {/* Medal Icons */}
+          <Typography variant="h5" sx={{ marginBottom: "5px" }}>
+            {index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : ""}
+          </Typography>
+
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: "700",
+              color: index === 0 ? "#ff6b6b" : index === 1 ? "#6a89cc" : "#78e08f",
+            }}
+          >
+            {player.name}
+          </Typography>
+          
+          <Typography variant="h4" sx={{ fontWeight: "800", color: "#333" }}>
+            {player.score}
+          </Typography>
+        </div>
+      ))}
+
         </div>
 
         {/* Line Chart */}
