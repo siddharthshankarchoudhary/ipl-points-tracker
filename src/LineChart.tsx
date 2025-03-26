@@ -10,19 +10,27 @@ interface MatchData {
   Siddharth: number;
 }
 
-// Data for matches
 const data: MatchData[] = [
   { Match: "", Arvind: 0, Nirvikar: 0, Siddharth: 0 },
   { Match: "KKR vs RCB", Arvind: 10, Nirvikar: -10, Siddharth: -10 },
-  { Match: "SRH vs RR", Arvind: 20, Nirvikar: -20, Siddharth: 0 },
-  { Match: "CSK vs MI", Arvind: 30, Nirvikar: -10, Siddharth: 10 },
-  { Match: "LSG vs DC", Arvind: 20, Nirvikar: 0, Siddharth: 20 },
-  { Match: "PBKS vs GT", Arvind: 10, Nirvikar: 10, Siddharth: 10 },
-  { Match: "RR vs KKR", Arvind: 20, Nirvikar: -10, Siddharth: 0 },
+  { Match: "SRH vs RR", Arvind: 10, Nirvikar: -10, Siddharth: 10 },
+  { Match: "CSK vs MI", Arvind: 10, Nirvikar: 10, Siddharth: 10 },
+  { Match: "LSG vs DC", Arvind: -10, Nirvikar: 10, Siddharth: 10 },
+  { Match: "PBKS vs GT", Arvind: -10, Nirvikar: 10, Siddharth: -10 },
+  { Match: "RR vs KKR", Arvind: 10, Nirvikar: -10, Siddharth: -10 },
 ];
 
+const cumulativeData = data.map((match, index) => {
+  return {
+    Match: match.Match,
+    Arvind: data.slice(0, index + 1).reduce((sum, m) => sum + m.Arvind, 0),
+    Nirvikar: data.slice(0, index + 1).reduce((sum, m) => sum + m.Nirvikar, 0),
+    Siddharth: data.slice(0, index + 1).reduce((sum, m) => sum + m.Siddharth, 0),
+  };
+});
+
 const latestScores = Object.fromEntries(
-  Object.entries(data[data.length - 1]).filter(([key]) => key !== "Match")
+  Object.entries(cumulativeData[cumulativeData.length - 1]).filter(([key]) => key !== "Match")
 ) as Record<keyof Omit<MatchData, "Match">, number>;
 
 const sortedPlayers = (Object.keys(latestScores) as Array<keyof Omit<MatchData, "Match">>)
@@ -79,12 +87,12 @@ const GameScoreChart = () => {
             xAxis={[
               {
                 scaleType: "point",
-                data: data.map((d) => d.Match),
+                data: cumulativeData.map((d) => d.Match),
                 tickLabelStyle: { fontSize: 12, textAnchor: "end" },
               },
             ]}
             series={sortedPlayers.map((player, index) => ({
-              data: data.map((d) => d[player.name]), // Type-safe key access
+              data: cumulativeData.map((d) => d[player.name]), // Type-safe key access
               label: player.name,
               color: index === 0 ? "#ff6b6b" : index === 1 ? "#6a89cc" : "#78e08f",
             }))}
