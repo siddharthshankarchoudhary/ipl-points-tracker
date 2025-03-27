@@ -1,0 +1,6 @@
+# node_modules and other files/folders that are prefixed with a period are ignored by default.
+# Check here for more info on the .eslintignore file - https://eslint.org/docs/latest/use/configure/ignore-deprecated#the-eslintignore-file
+
+build
+dist
+mockServiceWorker.js
