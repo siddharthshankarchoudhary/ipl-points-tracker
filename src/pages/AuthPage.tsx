@@ -121,7 +121,11 @@ export const AuthPage = (): React.ReactElement => {
         </Tabs>
 
         {activeTab === 0 && (
-          <Box component="form" onSubmit={onGoogleSigningIn} sx={{ width: "100%" }}>
+          <Box
+            component="form"
+            onSubmit={onGoogleSigningIn}
+            sx={{ width: "100%" }}
+          >
             <TextField
               margin="normal"
               required
@@ -172,7 +176,13 @@ export const AuthPage = (): React.ReactElement => {
         )}
 
         {activeTab === 1 && (
-          <Box component="form" onSubmit={(event: React.FormEvent<HTMLFormElement>) => {onSubmit(event)}} sx={{ width: "100%" }}>
+          <Box
+            component="form"
+            onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
+              onSubmit(event);
+            }}
+            sx={{ width: "100%" }}
+          >
             <TextField
               margin="normal"
               required
