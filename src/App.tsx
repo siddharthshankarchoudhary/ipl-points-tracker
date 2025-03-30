@@ -6,8 +6,8 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<AuthPage />} />
-        <Route path="game-score" element={<GameScoreChart />} />
+        <Route path="auth" element={<AuthPage />} />
+        <Route path="/" element={<GameScoreChart />} />
       </Routes>
     </Router>
   );

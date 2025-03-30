@@ -1,239 +1,311 @@
-import React, { useState } from "react";
+import React, { useState, ReactNode, ChangeEvent, FormEvent } from "react";
 import {
-  Container,
   Box,
-  Typography,
-  TextField,
   Button,
+  Container,
+  Divider,
+  Link,
   Paper,
-  Tabs,
   Tab,
+  Tabs,
+  TextField,
+  Typography,
 } from "@mui/material";
-import { useAuth } from "../context/authContext";
+import { GoogleIcon } from "../assets/GoogleIcon";
+import { AppleIcon } from "../assets/AppleIcon";
 import {
+  executeCreateUserWithEmailAndPassword,
   executeSignInUserWithEmailAndPassword,
   executeSignInWithApple,
   executeSignInWithGoogle,
 } from "../firebase/auth";
-import { Navigate } from "react-router-dom";
 
-export const AuthPage = (): React.ReactElement => {
-  const [activeTab, setActiveTab] = useState(0);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [isSigningIn, setIsSigningIn] = useState(false);
-  const { isUserLoggedIn } = useAuth();
+interface TabPanelProps {
+  children?: ReactNode;
+  index: number;
+  value: number;
+}
 
-  const handleTabChange = (event: React.SyntheticEvent, value: any) => {
-    setActiveTab(value);
+interface SignInFormData {
+  email: string;
+  password: string;
+}
+
+interface SignUpFormData extends SignInFormData {
+  confirmPassword: string;
+}
+
+function TabPanel(props: TabPanelProps): JSX.Element {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`auth-tabpanel-${index}`}
+      aria-labelledby={`auth-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+    </div>
+  );
+}
+
+function a11yProps(index: number): {
+  id: string;
+  "aria-controls": string;
+} {
+  return {
+    id: `auth-tab-${index}`,
+    "aria-controls": `auth-tabpanel-${index}`,
+  };
+}
+
+export const AuthPage: React.FC = () => {
+  const [tabValue, setTabValue] = useState<number>(0);
+  const [formData, setFormData] = useState<SignUpFormData>({
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [passwordError, setPasswordError] = useState<string>("");
+  const [emailError, setEmailError] = useState<string>("");
+
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  const validateEmail = (email: string): boolean => {
+    if (!email) return false;
+    return emailRegex.test(email);
   };
 
-  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!isSigningIn) {
-      setIsSigningIn(true);
-      await executeSignInUserWithEmailAndPassword(email, password);
+  const handleTabChange = (
+    _event: React.SyntheticEvent,
+    newValue: number,
+  ): void => {
+    setFormData({
+      email: "",
+      password: "",
+      confirmPassword: "",
+    });
+    setTabValue(newValue);
+    setPasswordError("");
+    setEmailError("");
+  };
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+
+    if (name === "password" || name === "confirmPassword") {
+      setPasswordError("");
+    }
+
+    if (name === "email") {
+      if (value && !validateEmail(value)) {
+        setEmailError("Please enter a valid email address");
+      } else {
+        setEmailError("");
+      }
     }
   };
 
-  const onGoogleSigningIn = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!isSigningIn) {
-      setIsSigningIn(true);
-      await executeSignInWithGoogle().catch(() => {
-        setIsSigningIn(false);
-      });
+  const handleSignIn = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault();
+
+    if (!validateEmail(formData.email)) {
+      setEmailError("Please enter a valid email address");
+      return;
     }
+
+    await executeSignInUserWithEmailAndPassword(
+      formData.email,
+      formData.password,
+    );
   };
 
-  const onAppleSigningIn = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!isSigningIn) {
-      setIsSigningIn(true);
-      await executeSignInWithApple().catch(() => {
-        setIsSigningIn(false);
-      });
+  const handleSignUp = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault();
+
+    if (!validateEmail(formData.email)) {
+      setEmailError("Please enter a valid email address");
+      return;
     }
+
+    if (formData.password !== formData.confirmPassword) {
+      setPasswordError("Passwords do not match");
+      return;
+    }
+    await executeCreateUserWithEmailAndPassword(
+      formData.email,
+      formData.password,
+    );
+  };
+
+  const handleGoogleSignIn = async (): Promise<void> => {
+    await executeSignInWithGoogle();
+  };
+
+  const handleAppleSignIn = async (): Promise<void> => {
+    await executeSignInWithApple();
   };
 
   return (
-    <Container
-      maxWidth="xs"
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-        backgroundColor: "#f0f4f8",
-      }}
-    >
-      {isUserLoggedIn && <Navigate to="/game-score" replace={true} />}
-      <Paper
-        elevation={3}
+    <Container component="main" maxWidth="xs">
+      <Box
         sx={{
-          padding: 4,
+          marginTop: 8,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          width: "100%",
-          borderRadius: 2,
         }}
       >
-        <Typography
-          component="h1"
-          variant="h4"
-          sx={{
-            mb: 3,
-            color: "#2563eb",
-            fontWeight: "bold",
-          }}
-        >
-          Welcome
-        </Typography>
-
-        <Tabs
-          value={activeTab}
-          onChange={handleTabChange}
-          variant="fullWidth"
-          sx={{
-            mb: 3,
-            "& .MuiTabs-indicator": {
-              backgroundColor: "#0d9488",
-            },
-          }}
-        >
-          <Tab
-            label="Sign In"
-            sx={{
-              color: activeTab === 0 ? "#0d9488" : "inherit",
-              fontWeight: "bold",
-            }}
-          />
-          <Tab
-            label="Sign Up"
-            sx={{
-              color: activeTab === 1 ? "#0d9488" : "inherit",
-              fontWeight: "bold",
-            }}
-          />
-        </Tabs>
-
-        {activeTab === 0 && (
-          <Box
-            component="form"
-            onSubmit={onGoogleSigningIn}
-            sx={{ width: "100%" }}
+        <Paper elevation={3} sx={{ width: "100%", borderRadius: 2 }}>
+          <Tabs
+            value={tabValue}
+            onChange={handleTabChange}
+            variant="fullWidth"
+            aria-label="authentication tabs"
           >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="Email Address"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              variant="outlined"
-              color="primary"
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              variant="outlined"
-              color="primary"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{
-                mt: 2,
-                mb: 2,
-                backgroundColor: "#0d9488",
-                "&:hover": {
-                  backgroundColor: "#0f766e",
-                },
-              }}
-            >
-              Sign In
-            </Button>
-            <Box textAlign="center">
+            <Tab label="Sign In" {...a11yProps(0)} />
+            <Tab label="Sign Up" {...a11yProps(1)} />
+          </Tabs>
+
+          <TabPanel value={tabValue} index={0}>
+            <Box component="form" onSubmit={handleSignIn} noValidate>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                value={formData.email}
+                onChange={handleInputChange}
+                error={!!emailError}
+                helperText={emailError}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                value={formData.password}
+                onChange={handleInputChange}
+              />
               <Button
-                color="primary"
-                size="small"
-                sx={{ textTransform: "none" }}
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
               >
-                Forgot Password?
+                Sign In
               </Button>
-            </Box>
-          </Box>
-        )}
 
-        {activeTab === 1 && (
-          <Box
-            component="form"
-            onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
-              onSubmit(event);
-            }}
-            sx={{ width: "100%" }}
-          >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="Email Address"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              variant="outlined"
-              color="primary"
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              variant="outlined"
-              color="primary"
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="Confirm Password"
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              variant="outlined"
-              color="primary"
-            />
+              <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                <Link href="#" variant="body2" onClick={() => setTabValue(1)}>
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Box>
+            </Box>
+          </TabPanel>
+
+          {/* Sign Up Form */}
+          <TabPanel value={tabValue} index={1}>
+            <Box component="form" onSubmit={handleSignUp} noValidate>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email-signup"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                value={formData.email}
+                onChange={handleInputChange}
+                error={!!emailError}
+                helperText={emailError}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password-signup"
+                autoComplete="new-password"
+                value={formData.password}
+                onChange={handleInputChange}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="confirmPassword"
+                label="Confirm Password"
+                type="password"
+                id="confirm-password"
+                autoComplete="new-password"
+                value={formData.confirmPassword}
+                onChange={handleInputChange}
+                error={!!passwordError}
+                helperText={passwordError}
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign Up
+              </Button>
+
+              <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                <Link href="#" variant="body2" onClick={() => setTabValue(0)}>
+                  {"Already have an account? Sign In"}
+                </Link>
+              </Box>
+            </Box>
+          </TabPanel>
+
+          <Box sx={{ px: 3, pb: 3 }}>
+            <Divider sx={{ my: 2 }}>
+              <Typography variant="body2" color="text.secondary">
+                OR
+              </Typography>
+            </Divider>
+
             <Button
-              type="submit"
               fullWidth
-              variant="contained"
-              sx={{
-                mt: 2,
-                mb: 2,
-                backgroundColor: "#0d9488",
-                "&:hover": {
-                  backgroundColor: "#0f766e",
-                },
-              }}
+              variant="outlined"
+              sx={{ mb: 2 }}
+              onClick={handleGoogleSignIn}
+              startIcon={<GoogleIcon height="24px" width="24px" />}
             >
-              Sign Up
+              Continue with Google
+            </Button>
+
+            <Button
+              fullWidth
+              variant="outlined"
+              onClick={handleAppleSignIn}
+              startIcon={<AppleIcon height="24px" width="24px" />}
+            >
+              Continue with Apple
             </Button>
           </Box>
-        )}
-      </Paper>
+        </Paper>
+      </Box>
     </Container>
   );
 };
