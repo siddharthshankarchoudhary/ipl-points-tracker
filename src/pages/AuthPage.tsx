@@ -18,6 +18,7 @@ import {
   executeSignInUserWithEmailAndPassword,
   executeSignInWithApple,
   executeSignInWithGoogle,
+  executeSignOut,
 } from "../firebase/auth";
 
 interface TabPanelProps {
@@ -306,6 +307,18 @@ export const AuthPage: React.FC = () => {
           </Box>
         </Paper>
       </Box>
+
+      <Button
+        type="button"
+        fullWidth
+        variant="contained"
+        sx={{ mt: 3, mb: 2 }}
+        onClick={async () => {
+          await executeSignOut();
+        }}
+      >
+        Sign Out
+      </Button>
     </Container>
   );
 };
