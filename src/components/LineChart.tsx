@@ -11,7 +11,6 @@ import {
   Typography,
   Button,
 } from "@mui/material";
-import { Navigate, useNavigate } from "react-router-dom";
 
 // Define Type for Match Data
 interface MatchData {
@@ -62,7 +61,6 @@ const sortedPlayers = (
 
 const GameScoreChart = () => {
   const [chartWidth, setChartWidth] = useState<number>(window.innerWidth * 0.9);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => setChartWidth(window.innerWidth * 0.9);

@@ -1,5 +1,4 @@
 import GameScoreChart from "./components/LineChart";
-import { AuthPage } from "./pages/AuthPage";
 import { AuthProviderComponent, useAuth } from "./context/authContext";
 
 function App() {
