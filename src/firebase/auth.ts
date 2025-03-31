@@ -2,10 +2,9 @@ import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
   OAuthProvider,
-  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
-  updatePassword,
+  signOut,
   UserCredential,
 } from "firebase/auth";
 import { auth } from "./firebase";
@@ -40,7 +39,7 @@ export const executeSignInWithApple = async (): Promise<UserCredential> => {
 };
 
 export const executeSignOut = async (): Promise<void> => {
-  await auth.signOut();
+  return signOut(auth);
 };
 
 // export const executePasswordReset = async (email: string): Promise<void> => {

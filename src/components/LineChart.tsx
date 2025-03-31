@@ -33,7 +33,8 @@ const data: MatchData[] = [
   { Match: "CSK vs RCB", Arvind: 10, Nirvikar: -10, Siddharth: -10 },
   { Match: "GT vs MI", Arvind: 10, Nirvikar: -10, Siddharth: -10 },
   { Match: "DC vs SRH", Arvind: -10, Nirvikar: 10, Siddharth: -10 },
-  { Match: "RR vs CSK", Arvind: -10, Nirvikar: -10, Siddharth: -10 }, 
+  { Match: "RR vs CSK", Arvind: -10, Nirvikar: -10, Siddharth: -10 },
+  { Match: "MI vs KKR", Arvind: -10, Nirvikar: 10, Siddharth: -10 },
 ];
 
 const cumulativeData = data.map((match, index) => {
@@ -238,15 +239,6 @@ const GameScoreChart = () => {
           </Table>
         </TableContainer>
       </div>
-      <Button
-        type="button"
-        fullWidth
-        variant="contained"
-        sx={{ mt: 3, mb: 2 }}
-        onClick={() => navigate("/auth", { replace: true })}
-      >
-        Sign In
-      </Button>
     </div>
   );
 };

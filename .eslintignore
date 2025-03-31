@@ -4,3 +4,5 @@
 build
 dist
 mockServiceWorker.js
+*.d.ts
+*,config.js

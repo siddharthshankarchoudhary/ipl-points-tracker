@@ -34,7 +34,6 @@ module.exports = {
     "import",
     "eslint-plugin-tsdoc",
     "react-refresh",
-    "check-model-name",
   ],
   rules: {
     "react-refresh/only-export-components": [
@@ -219,7 +218,6 @@ module.exports = {
     "import/no-named-export": "off", // we want everything to be a named export.
     "import/no-self-import": "error", // Forbid a module from importing itself.
     "import/prefer-default-export": "off", // we want everything to be named.
-    "check-model-name/model-name-required": "error",
   },
   overrides: [
     {
