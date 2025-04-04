@@ -48,7 +48,7 @@ export const Header = () => {
               variant="h5"
               sx={{
                 fontWeight: 700,
-                color: "#333", // updated from white
+                color: "#333",
                 letterSpacing: 1,
               }}
             >
@@ -56,16 +56,15 @@ export const Header = () => {
             </Typography>
           </Box>
 
-          {/* Navigation */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <>
               <Button
                 component={RouterLink}
                 to="/dashboard"
                 sx={{
-                  color: "#333", // updated from white
+                  color: "#333",
                   textTransform: "none",
-                  "&:hover": { backgroundColor: "rgba(0,0,0,0.05)" }, // subtle hover on light bg
+                  "&:hover": { backgroundColor: "rgba(0,0,0,0.05)" },
                 }}
               >
                 Dashboard
@@ -74,16 +73,16 @@ export const Header = () => {
                 component={RouterLink}
                 to="/profile"
                 sx={{
-                  color: "#333", // updated from white
+                  color: "#333",
                   textTransform: "none",
-                  "&:hover": { backgroundColor: "rgba(0,0,0,0.05)" }, // same hover style
+                  "&:hover": { backgroundColor: "rgba(0,0,0,0.05)" },
                 }}
               >
                 Profile
               </Button>
 
               <Box sx={{ ml: isMobile ? 0 : 2 }}>
-                <UserButton afterSignOutUrl="/" />
+                <UserButton />
               </Box>
             </>
           </Box>
