@@ -10,7 +10,7 @@ type AuthPageProps = {
 export const AuthPage = ({ pagePath }: AuthPageProps): React.ReactElement => {
   const appearance = {
     layout: {
-      logoImageUrl: "/src/assets/logo.png",
+      logoImageUrl: "RunsAndRivalryLogo.png",
     },
     elements: {
       logoBox: {

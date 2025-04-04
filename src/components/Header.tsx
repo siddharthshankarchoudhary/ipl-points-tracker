@@ -36,7 +36,7 @@ export const Header = () => {
           >
             <Box
               component="img"
-              src="/src/assets/logo.png"
+              src="/RunsAndRivalryLogo.png"
               alt="Logo"
               sx={{
                 height: 40,
