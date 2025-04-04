@@ -1,12 +1,28 @@
-import GameScoreChart from "./components/LineChart";
-import { AuthProviderComponent, useAuth } from "./context/authContext";
+import { BrowserRouter } from "react-router-dom";
+import { useAuth } from "@clerk/clerk-react";
+import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
+import { PropsWithChildren } from "react";
+import { Router } from "./routes/Router";
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#1976d2",
+    },
+    secondary: {
+      main: "#dc004e",
+    },
+  },
+});
 
 function App() {
-  const auth = useAuth();
   return (
-    <AuthProviderComponent> 
-      <GameScoreChart /> 
-    </AuthProviderComponent>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <BrowserRouter>
+        <Router />
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

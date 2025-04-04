@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { LineChart } from "@mui/x-charts/LineChart";
 import {
   Table,
@@ -9,10 +9,11 @@ import {
   TableRow,
   Paper,
   Typography,
-  Button,
+  useMediaQuery,
+  useTheme,
+  Box,
 } from "@mui/material";
 
-// Define Type for Match Data
 interface MatchData {
   Match: string;
   Arvind: number;
@@ -36,19 +37,16 @@ const data: MatchData[] = [
   { Match: "MI vs KKR", Arvind: -10, Nirvikar: 10, Siddharth: -10 },
   { Match: "LSG vs PBKS", Arvind: -10, Nirvikar: 10, Siddharth: 10 },
   { Match: "RCB vs GT", Arvind: -10, Nirvikar: 10, Siddharth: 10 },
-  { Match: "KKR vs SRH", Arvind: -10, Nirvikar: 10, Siddharth: -10 }, 
+  { Match: "KKR vs SRH", Arvind: -10, Nirvikar: 10, Siddharth: -10 },
+  { Match: "LSG vs MI", Arvind: 10, Nirvikar: -10, Siddharth: -10 },
 ];
 
-const cumulativeData = data.map((match, index) => {
-  return {
-    Match: match.Match,
-    Arvind: data.slice(0, index + 1).reduce((sum, m) => sum + m.Arvind, 0),
-    Nirvikar: data.slice(0, index + 1).reduce((sum, m) => sum + m.Nirvikar, 0),
-    Siddharth: data
-      .slice(0, index + 1)
-      .reduce((sum, m) => sum + m.Siddharth, 0),
-  };
-});
+const cumulativeData = data.map((match, index) => ({
+  Match: match.Match,
+  Arvind: data.slice(0, index + 1).reduce((sum, m) => sum + m.Arvind, 0),
+  Nirvikar: data.slice(0, index + 1).reduce((sum, m) => sum + m.Nirvikar, 0),
+  Siddharth: data.slice(0, index + 1).reduce((sum, m) => sum + m.Siddharth, 0),
+}));
 
 const latestScores = Object.fromEntries(
   Object.entries(cumulativeData[cumulativeData.length - 1]).filter(
@@ -63,100 +61,88 @@ const sortedPlayers = (
   .sort((a, b) => b.score - a.score);
 
 const GameScoreChart = () => {
-  const [chartWidth, setChartWidth] = useState<number>(window.innerWidth * 0.9);
+  const theme = useTheme();
+
+  const chartContainerRef = useRef<HTMLDivElement>(null);
+  const [chartWidth, setChartWidth] = useState<number>(600); // fallback
 
   useEffect(() => {
-    const handleResize = () => setChartWidth(window.innerWidth * 0.9);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    const observer = new ResizeObserver((entries) => {
+      if (entries[0]) {
+        setChartWidth(entries[0].contentRect.width);
+      }
+    });
+
+    if (chartContainerRef.current) {
+      observer.observe(chartContainerRef.current);
+    }
+
+    return () => {
+      if (chartContainerRef.current) {
+        observer.unobserve(chartContainerRef.current);
+      }
+    };
   }, []);
 
   return (
-    <div
-      style={{
+    <Box
+      sx={{
         fontFamily: "Inter, sans-serif",
         backgroundColor: "#f5f7fa",
         minHeight: "100vh",
-        padding: "20px",
+        px: 2,
+        py: 4,
       }}
     >
-      <div
-        style={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "20px",
-            marginBottom: "20px",
-            flexWrap: "wrap",
-          }}
+      <Box display="flex" flexDirection="column" alignItems="center">
+        <Box
+          display="flex"
+          flexWrap="wrap"
+          justifyContent="center"
+          gap={2}
+          mb={4}
+          width="100%"
         >
           {sortedPlayers.map((player, index) => (
-            <div
+            <Box
               key={player.name}
-              style={{
+              sx={{
                 backgroundColor: "white",
-                borderRadius: "12px",
-                padding: "15px 25px",
-                boxShadow: "0px 6px 15px rgba(0,0,0,0.1)",
+                borderRadius: 3,
+                p: 2,
+                boxShadow: 3,
                 textAlign: "center",
-                minWidth: "120px",
-                transition: "transform 0.2s",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
+                minWidth: 120,
               }}
             >
-              {/* Medal Icons */}
-              <Typography variant="h5" sx={{ marginBottom: "5px" }}>
-                {index === 0
-                  ? "🥇"
-                  : index === 1
-                    ? "🥈"
-                    : index === 2
-                      ? "🥉"
-                      : ""}
+              <Typography variant="h5" mb={0.5}>
+                {["🥇", "🥈", "🥉"][index] || ""}
               </Typography>
-
               <Typography
                 variant="h6"
-                sx={{
-                  fontWeight: "700",
-                  color:
-                    index === 0
-                      ? "#ff6b6b"
-                      : index === 1
-                        ? "#6a89cc"
-                        : "#78e08f",
-                }}
+                fontWeight="700"
+                color={
+                  index === 0 ? "#ff6b6b" : index === 1 ? "#6a89cc" : "#78e08f"
+                }
               >
                 {player.name}
               </Typography>
-
-              <Typography
-                variant="h4"
-                sx={{ fontWeight: "800", color: "#333" }}
-              >
+              <Typography variant="h4" fontWeight="800" color="#333">
                 {player.score}
               </Typography>
-            </div>
+            </Box>
           ))}
-        </div>
+        </Box>
 
-        {/* Line Chart */}
-        <div
-          style={{
-            width: "90%",
+        <Box
+          ref={chartContainerRef}
+          sx={{
+            width: "100%",
+            maxWidth: 1000,
             backgroundColor: "white",
-            borderRadius: "12px",
-            padding: "20px",
-            boxShadow: "0px 6px 15px rgba(0,0,0,0.15)",
+            borderRadius: 3,
+            p: 2,
+            boxShadow: 3,
           }}
         >
           <LineChart
@@ -168,7 +154,7 @@ const GameScoreChart = () => {
               },
             ]}
             series={sortedPlayers.map((player, index) => ({
-              data: cumulativeData.map((d) => d[player.name]), // Type-safe key access
+              data: cumulativeData.map((d) => d[player.name]),
               label: player.name,
               color:
                 index === 0 ? "#ff6b6b" : index === 1 ? "#6a89cc" : "#78e08f",
@@ -176,23 +162,23 @@ const GameScoreChart = () => {
             width={chartWidth}
             height={450}
           />
-        </div>
+        </Box>
 
         {/* Points Table */}
         <TableContainer
           component={Paper}
           sx={{
-            marginTop: 4,
-            maxWidth: 800,
-            borderRadius: "12px",
-            overflow: "hidden",
-            boxShadow: "0px 6px 15px rgba(0,0,0,0.15)",
+            mt: 4,
+            width: "100%",
+            overflowX: "auto",
+            borderRadius: 3,
+            boxShadow: 3,
           }}
         >
           <Typography
             variant="h6"
             sx={{
-              padding: 2,
+              p: 2,
               textAlign: "center",
               fontWeight: "700",
               background: "linear-gradient(90deg, #ff9a9e, #fad0c4)",
@@ -224,7 +210,6 @@ const GameScoreChart = () => {
                   key={index}
                   sx={{
                     backgroundColor: index % 2 === 0 ? "#fff" : "#f5f5f5",
-                    transition: "all 0.2s",
                     "&:hover": { backgroundColor: "#ffe0b2" },
                   }}
                 >
@@ -239,8 +224,8 @@ const GameScoreChart = () => {
             </TableBody>
           </Table>
         </TableContainer>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 
