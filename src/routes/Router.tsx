@@ -39,16 +39,25 @@ const appRoutes = (): RouteObject[] => {
 const authRoutes = (): RouteObject[] => {
   return [
     {
-      path: Path.SignIn,
-      element: <AuthPage pagePath={Path.SignIn} />,
-    },
-    {
-      path: Path.SignUp,
-      element: <AuthPage pagePath={Path.SignUp} />,
-    },
-    {
-      path: "/*",
-      element: <NotFound />,
+      element: <AuthLayout />,
+      children: [
+        {
+          path: Path.SignIn,
+          element: <AuthPage pagePath={Path.SignIn} />,
+        },
+        {
+          path: Path.SignUp,
+          element: <AuthPage pagePath={Path.SignUp} />,
+        },
+        {
+          path: "/",
+          element: <AuthPage pagePath={Path.SignIn} />,
+        },
+        {
+          path: "*",
+          element: <NotFound />,
+        },
+      ],
     },
   ];
 };
