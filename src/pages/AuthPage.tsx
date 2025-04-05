@@ -31,9 +31,9 @@ export const AuthPage = ({ pagePath }: AuthPageProps): React.ReactElement => {
       padding="40px"
     >
       {pagePath === Path.SignIn ? (
-        <SignIn signUpUrl="/sign-up" appearance={appearance} />
+        <SignIn signUpUrl={Path.SignUp} appearance={appearance} />
       ) : (
-        <SignUp signInUrl="/sign-In" appearance={appearance} />
+        <SignUp signInUrl={Path.SignIn} appearance={appearance} />
       )}
     </Stack>
   );
