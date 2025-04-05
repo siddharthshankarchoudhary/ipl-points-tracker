@@ -43,10 +43,6 @@ const authRoutes = (): RouteObject[] => {
       element: <AuthLayout />,
       children: [
         {
-          index: true,
-          element: <AuthPage pagePath={Path.SignIn} />,
-        },
-        {
           path: `${Path.SignIn}/*`,
           element: <AuthPage pagePath={Path.SignIn} />,
         },
