@@ -62,6 +62,10 @@ const authRoutes = (): RouteObject[] => {
           path: "sign-up#/continue",
           element: <AuthPage pagePath={Path.SignUp} />,
         },
+        {
+          path: "*",
+          element: <NotFound />,
+        },
       ],
     },
   ];
