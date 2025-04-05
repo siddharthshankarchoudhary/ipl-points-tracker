@@ -54,14 +54,27 @@ const authRoutes = (): RouteObject[] => {
           path: `${Path.SignUp}/*`,
           element: <AuthPage pagePath={Path.SignUp} />,
         },
+        {
+          path: "sso-callback",
+          element: <AuthPage pagePath={Path.SignIn} />,
+        },
+        {
+          path: "sign-up/continue",
+          element: <AuthPage pagePath={Path.SignUp} />,
+        },
       ],
     },
   ];
 };
 
 export const Router = (): React.ReactElement | null => {
-  const user = useUser();
-  if (!user.isSignedIn) {
+  const { isSignedIn, isLoaded } = useUser();
+  
+  if (!isLoaded) {
+    return null;  
+  }
+  
+  if (!isSignedIn) {
     return useRoutes(authRoutes());
   } else {
     return useRoutes(appRoutes());
