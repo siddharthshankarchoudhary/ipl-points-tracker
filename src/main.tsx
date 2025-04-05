@@ -19,8 +19,6 @@ createRoot(document.getElementById("root")!).render(
           unsafe_disableDevelopmentModeWarnings: true,
         },
       }}
-      afterSignInUrl="/"
-      afterSignUpUrl="/"
     >
       <App />
     </ClerkProvider>
