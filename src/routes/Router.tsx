@@ -39,38 +39,16 @@ const appRoutes = (): RouteObject[] => {
 const authRoutes = (): RouteObject[] => {
   return [
     {
-      path: "/",
-      element: <AuthLayout />,
-      children: [
-        {
-          path: `${Path.SignIn}/*`,
-          element: <AuthPage pagePath={Path.SignIn} />,
-        },
-        {
-          path: `${Path.SignUp}/*`,
-          element: <AuthPage pagePath={Path.SignUp} />,
-        },
-        {
-          path: Path.SignIn, 
-          element: <AuthPage pagePath={Path.SignIn} />,
-        },
-        {
-          path: Path.SignUp,
-          element: <AuthPage pagePath={Path.SignUp} />,
-        },
-        {
-          path: "#/sso-callback",
-          element: <AuthPage pagePath={Path.SignIn} />,
-        },
-        {
-          path: "sign-up#/continue",
-          element: <AuthPage pagePath={Path.SignUp} />,
-        },
-        {
-          path: "*",
-          element: <NotFound />,
-        },
-      ],
+      path: Path.SignIn,
+      element: <AuthPage pagePath={Path.SignIn} />,
+    },
+    {
+      path: Path.SignUp,
+      element: <AuthPage pagePath={Path.SignUp} />,
+    },
+    {
+      path: "/*",
+      element: <NotFound />,
     },
   ];
 };
