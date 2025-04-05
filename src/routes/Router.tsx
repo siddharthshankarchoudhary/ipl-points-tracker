@@ -55,11 +55,11 @@ const authRoutes = (): RouteObject[] => {
           element: <AuthPage pagePath={Path.SignUp} />,
         },
         {
-          path: "sso-callback",
+          path: "#/sso-callback",
           element: <AuthPage pagePath={Path.SignIn} />,
         },
         {
-          path: "sign-up/continue",
+          path: "sign-up#/continue",
           element: <AuthPage pagePath={Path.SignUp} />,
         },
       ],
