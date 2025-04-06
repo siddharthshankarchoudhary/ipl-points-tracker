@@ -1,15 +1,46 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { RouteObject, useRoutes } from "react-router-dom";
-import HomeLayout from "../layout/HomeLayout";
-import GameScoreChart from "../components/LineChart";
 import { Path } from "./Path";
-import Profile from "../pages/Profile";
 import { useUser } from "@clerk/clerk-react";
-import AuthLayout from "../layout/AuthLayout";
-import { AuthPage } from "../pages/AuthPage";
-import NotFound from "../pages/NotFound";
+import { User } from "../TypeDefinition/User";
 
-const appRoutes = (): RouteObject[] => {
+const HomeLayout = lazy(() =>
+  import("../layout/HomeLayout").then((component) => ({
+    default: component.HomeLayout,
+  })),
+);
+
+const AuthLayout = lazy(() =>
+  import("../layout/AuthLayout").then((component) => ({
+    default: component.AuthLayout,
+  })),
+);
+
+const RoomsPage = lazy(() =>
+  import("../pages/RoomsPage").then((component) => ({
+    default: component.RoomsPage,
+  })),
+);
+
+const Profile = lazy(() =>
+  import("../pages/Profile").then((component) => ({
+    default: component.Profile,
+  })),
+);
+
+const NotFound = lazy(() =>
+  import("../pages/NotFound").then((component) => ({
+    default: component.NotFound,
+  })),
+);
+
+const AuthPage = lazy(() =>
+  import("../pages/AuthPage").then((component) => ({
+    default: component.AuthPage,
+  })),
+);
+
+const appRoutes = (user: User): RouteObject[] => {
   return [
     {
       path: "/",
@@ -17,19 +48,35 @@ const appRoutes = (): RouteObject[] => {
       children: [
         {
           index: true,
-          element: <GameScoreChart />,
+          element: (
+            <Suspense>
+              <RoomsPage {...user} />
+            </Suspense>
+          ),
         },
         {
           path: Path.Dashboard,
-          element: <GameScoreChart />,
+          element: (
+            <Suspense>
+              <RoomsPage {...user} />
+            </Suspense>
+          ),
         },
         {
           path: Path.Profile,
-          element: <Profile />,
+          element: (
+            <Suspense>
+              <Profile {...user} />
+            </Suspense>
+          ),
         },
         {
           path: "*",
-          element: <NotFound />,
+          element: (
+            <Suspense>
+              <NotFound />
+            </Suspense>
+          ),
         },
       ],
     },
@@ -43,19 +90,35 @@ const authRoutes = (): RouteObject[] => {
       children: [
         {
           path: Path.SignIn,
-          element: <AuthPage pagePath={Path.SignIn} />,
+          element: (
+            <Suspense>
+              <AuthPage pagePath={Path.SignIn} />
+            </Suspense>
+          ),
         },
         {
           path: Path.SignUp,
-          element: <AuthPage pagePath={Path.SignUp} />,
+          element: (
+            <Suspense>
+              <AuthPage pagePath={Path.SignUp} />
+            </Suspense>
+          ),
         },
         {
           path: "/",
-          element: <AuthPage pagePath={Path.SignIn} />,
+          element: (
+            <Suspense>
+              <AuthPage pagePath={Path.SignIn} />
+            </Suspense>
+          ),
         },
         {
           path: "*",
-          element: <NotFound />,
+          element: (
+            <Suspense>
+              <NotFound />
+            </Suspense>
+          ),
         },
       ],
     },
@@ -63,7 +126,22 @@ const authRoutes = (): RouteObject[] => {
 };
 
 export const Router = (): React.ReactElement | null => {
-  const { isSignedIn, isLoaded } = useUser();
+  const { isSignedIn, isLoaded, user } = useUser();
+
+  let userObject: User | undefined;
+  if (user) {
+    userObject = {
+      createdAt: user.createdAt,
+      emailAddress: user.emailAddresses[0].emailAddress,
+      firstName: user.firstName,
+      id: user.id,
+      imageUrl: user.imageUrl,
+      lastName: user.lastName,
+      updatedAt: user.updatedAt,
+      username: user.username,
+      fullName: user.fullName,
+    };
+  }
 
   if (!isLoaded) {
     return null;
@@ -71,7 +149,9 @@ export const Router = (): React.ReactElement | null => {
 
   if (!isSignedIn) {
     return useRoutes(authRoutes());
+  } else if (userObject) {
+    return useRoutes(appRoutes(userObject));
   } else {
-    return useRoutes(appRoutes());
+    return null;
   }
 };

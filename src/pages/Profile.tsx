@@ -1,4 +1,3 @@
-import { useUser } from "@clerk/clerk-react";
 import {
   Typography,
   Paper,
@@ -9,10 +8,9 @@ import {
   ListItemText,
   Divider,
 } from "@mui/material";
+import { User } from "../TypeDefinition/User";
 
-const Profile = () => {
-  const { user } = useUser();
-
+export const Profile = (user: User) => {
   if (!user) return null;
 
   return (
@@ -47,7 +45,7 @@ const Profile = () => {
               {user.firstName} {user.lastName}
             </Typography>
             <Typography variant="body1" color="text.secondary" paragraph>
-              {user.emailAddresses[0].emailAddress}
+              {user.emailAddress}
             </Typography>
 
             <Divider sx={{ my: 3 }} />
@@ -88,5 +86,3 @@ const Profile = () => {
     </Box>
   );
 };
-
-export default Profile;

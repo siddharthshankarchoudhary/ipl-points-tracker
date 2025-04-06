@@ -1,7 +1,7 @@
 import { Link as RouterLink } from "react-router-dom";
 import { Typography, Button, Box } from "@mui/material";
 
-const NotFound = () => {
+export const NotFound = () => {
   return (
     <Box sx={{ textAlign: "center", py: 8 }}>
       <Typography
@@ -27,5 +27,3 @@ const NotFound = () => {
     </Box>
   );
 };
-
-export default NotFound;

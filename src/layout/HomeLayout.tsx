@@ -3,7 +3,7 @@ import { Box, Container } from "@mui/material";
 import { ProtectedRoute } from "../components/ProtectedRoute";
 import { Header } from "../components/Header";
 
-const HomeLayout = () => {
+export const HomeLayout = () => {
   return (
     <ProtectedRoute>
       <Box
@@ -17,5 +17,3 @@ const HomeLayout = () => {
     </ProtectedRoute>
   );
 };
-
-export default HomeLayout;
