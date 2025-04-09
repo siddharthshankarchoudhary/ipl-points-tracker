@@ -64,11 +64,11 @@ const authRoutes = (): RouteObject[] => {
 
 export const Router = (): React.ReactElement | null => {
   const { isSignedIn, isLoaded } = useUser();
-  
+
   if (!isLoaded) {
-    return null;  
+    return null;
   }
-  
+
   if (!isSignedIn) {
     return useRoutes(authRoutes());
   } else {
