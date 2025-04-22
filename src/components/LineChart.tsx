@@ -23,9 +23,9 @@ interface MatchData {
 
 const data: MatchData[] = [
   { Match: "", Arvind: 0, Nirvikar: 0, Siddharth: 0 },
-  { Match: "KKR vs RCB", Arvind: 10, Nirvikar: -10, Siddharth: -10 },
-  { Match: "SRH vs RR", Arvind: 10, Nirvikar: -10, Siddharth: 10 },
-  { Match: "CSK vs MI", Arvind: 10, Nirvikar: 10, Siddharth: 10 },
+  // { Match: "KKR vs RCB", Arvind: 10, Nirvikar: -10, Siddharth: -10 },
+  // { Match: "SRH vs RR", Arvind: 10, Nirvikar: -10, Siddharth: 10 },
+  // { Match: "CSK vs MI", Arvind: 10, Nirvikar: 10, Siddharth: 10 },
   { Match: "LSG vs DC", Arvind: -10, Nirvikar: 10, Siddharth: 10 },
   { Match: "PBKS vs GT", Arvind: -10, Nirvikar: 10, Siddharth: -10 },
   { Match: "RR vs KKR", Arvind: 10, Nirvikar: -10, Siddharth: -10 },
