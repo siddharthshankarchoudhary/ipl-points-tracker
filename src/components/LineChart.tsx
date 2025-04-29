@@ -68,6 +68,7 @@ const data: MatchData[] = [
   { Match: "MI vs LSG", Arvind: -10, Nirvikar: -10, Siddharth: 10 },
   { Match: "DC vs RCB", Arvind: 10, Nirvikar: -10, Siddharth: -10 },
   { Match: "GT vs RR", Arvind: -10, Nirvikar: 10, Siddharth: -10 },
+  { Match: "DC vs KKR", Arvind: 0, Nirvikar: 0, Siddharth: -10 },
 ];
 
 const cumulativeData = data.map((match, index) => ({
