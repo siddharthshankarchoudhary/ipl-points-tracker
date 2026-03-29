@@ -60,11 +60,11 @@ const JoinRoomPage = () => {
                         label="Invite Code"
                         placeholder="Enter 8-character code"
                         value={inviteCode}
-                        onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
+                        onChange={(e) => setInviteCode(e.target.value)}
                         disabled={loading}
                         inputProps={{
                             maxLength: 8,
-                            style: { textTransform: "uppercase", letterSpacing: 2 },
+                            style: { letterSpacing: 2 },
                         }}
                         sx={{ mb: 3 }}
                     />
