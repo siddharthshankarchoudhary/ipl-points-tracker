@@ -8,6 +8,10 @@ import { useUser } from "@clerk/clerk-react";
 import AuthLayout from "../layout/AuthLayout";
 import { AuthPage } from "../pages/AuthPage";
 import NotFound from "../pages/NotFound";
+import RoomsListPage from "../pages/RoomsListPage";
+import CreateRoomPage from "../pages/CreateRoomPage";
+import JoinRoomPage from "../pages/JoinRoomPage";
+import RoomDetailPage from "../pages/RoomDetailPage";
 
 const appRoutes = (): RouteObject[] => {
   return [
@@ -17,7 +21,7 @@ const appRoutes = (): RouteObject[] => {
       children: [
         {
           index: true,
-          element: <GameScoreChart />,
+          element: <RoomsListPage />,
         },
         {
           path: Path.Dashboard,
@@ -26,6 +30,22 @@ const appRoutes = (): RouteObject[] => {
         {
           path: Path.Profile,
           element: <Profile />,
+        },
+        {
+          path: Path.Rooms,
+          element: <RoomsListPage />,
+        },
+        {
+          path: Path.CreateRoom,
+          element: <CreateRoomPage />,
+        },
+        {
+          path: Path.JoinRoom,
+          element: <JoinRoomPage />,
+        },
+        {
+          path: Path.RoomDetail,
+          element: <RoomDetailPage />,
         },
         {
           path: "*",
