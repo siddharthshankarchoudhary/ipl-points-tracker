@@ -10,8 +10,9 @@ import {
     Chip,
 } from "@mui/material";
 import { usePredictionService } from "../services/predictionService";
-import { fetchDailyMatches } from "../services/matchService";
+import { useMatchService } from "../services/matchService";
 import { Prediction, Match } from "../services/types";
+import { formatMatchDateTime } from "../utils/dateUtils";
 
 interface PredictionsTabProps {
     roomId: string;
@@ -19,6 +20,7 @@ interface PredictionsTabProps {
 
 const PredictionsTab = ({ roomId }: PredictionsTabProps) => {
     const predictionService = usePredictionService();
+    const matchService = useMatchService();
     const [predictions, setPredictions] = useState<Prediction[]>([]);
     const [matches, setMatches] = useState<Match[]>([]);
     const [loading, setLoading] = useState(true);
@@ -37,7 +39,7 @@ const PredictionsTab = ({ roomId }: PredictionsTabProps) => {
             setError(null);
             const [predictionsData, matchesData] = await Promise.all([
                 predictionService.getPredictionsForRoom(roomId),
-                fetchDailyMatches(),
+                matchService.getDailyMatches(),
             ]);
             setPredictions(predictionsData);
             setMatches(matchesData);
@@ -112,7 +114,7 @@ const PredictionsTab = ({ roomId }: PredictionsTabProps) => {
                                             }
                                         />
                                         <Chip
-                                            label={new Date(match.matchDate).toLocaleTimeString()}
+                                            label={formatMatchDateTime(match.matchDate)}
                                             size="small"
                                             variant="outlined"
                                         />

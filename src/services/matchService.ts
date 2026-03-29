@@ -55,51 +55,6 @@ export const useMatchService = () => {
     };
 };
 
-// Fallback function to generate mock matches if backend is not available
-export const fetchDailyMatches = async (): Promise<Match[]> => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const mockMatches: Match[] = [
-        {
-            id: "match_1",
-            teamA: "Mumbai Indians",
-            teamB: "Rajasthan Royals",
-            status: "SCHEDULED",
-            matchDate: new Date(today.getTime() + 4 * 60 * 60 * 1000).toISOString(),
-            winnerTeam: undefined,
-        },
-        {
-            id: "match_2",
-            teamA: "Delhi Capitals",
-            teamB: "Kolkata Knight Riders",
-            status: "SCHEDULED",
-            matchDate: new Date(today.getTime() + 8 * 60 * 60 * 1000).toISOString(),
-            winnerTeam: undefined,
-        },
-    ];
-
-    return mockMatches;
-};
-
-// Fetch a specific match by ID
-export const fetchMatch = async (matchId: string): Promise<Match | null> => {
-    const matches = await fetchDailyMatches();
-    return matches.find((m) => m.id === matchId) || null;
-};
-
-// Get scheduled matches for today
-export const getScheduledMatches = async (): Promise<Match[]> => {
-    const matches = await fetchDailyMatches();
-    return matches.filter((m) => m.status === "SCHEDULED");
-};
-
-// Get live matches
-export const getLiveMatches = async (): Promise<Match[]> => {
-    const matches = await fetchDailyMatches();
-    return matches.filter((m) => m.status === "LIVE");
-};
-
 // Simulate match status update (used for testing)
 export const updateMatchStatus = (
     match: Match,
