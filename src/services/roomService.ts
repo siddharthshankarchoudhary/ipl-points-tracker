@@ -4,6 +4,12 @@ import { Room, CreateRoomRequest, JoinRoomRequest } from "./types";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
 
+export interface RoomSettings {
+    allowPredictionChange?: boolean;
+    predictionCutoffMinutes?: number;
+    assignRandomPrediction?: boolean;
+}
+
 export const useRoomService = () => {
     const { getToken } = useAuth();
 
@@ -53,5 +59,19 @@ export const useRoomService = () => {
         getRoomDetails: async (roomId: string): Promise<Room> => {
             return request<Room>(`/${roomId}`, { method: "GET" });
         },
+
+        updateRoomSettings: async (roomId: string, settings: RoomSettings): Promise<Room> => {
+            return request<Room>(`/${roomId}/settings`, {
+                method: "PUT",
+                body: JSON.stringify(settings),
+            });
+        },
+
+        deleteRoom: async (roomId: string): Promise<{ message: string }> => {
+            return request<{ message: string }>(`/${roomId}`, {
+                method: "DELETE",
+            });
+        },
     };
 };
+

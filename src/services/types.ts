@@ -6,8 +6,11 @@ export interface Room {
     adminId: string;
     inviteCode: string;
     createdAt: string;
-    membersCount: number;
+    membersCount?: number;
     members: RoomMember[];
+    allowPredictionChange?: boolean;
+    predictionCutoffMinutes?: number;
+    assignRandomPrediction?: boolean;
 }
 
 export interface RoomMember {

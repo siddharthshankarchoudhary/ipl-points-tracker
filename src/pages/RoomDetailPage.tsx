@@ -15,6 +15,7 @@ import { useRoomService } from "../services/roomService";
 import { Room } from "../services/types";
 import PredictionsTab from "../components/PredictionsTab";
 import LeaderboardTab from "../components/LeaderboardTab";
+import { RoomSettingsComponent } from "../components/RoomSettings";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -67,6 +68,14 @@ const RoomDetailPage = () => {
         }
     };
 
+    const handleSettingsUpdate = (updatedRoom: Room) => {
+        setRoom(updatedRoom);
+    };
+
+    const handleRoomDelete = () => {
+        navigate("/rooms");
+    };
+
     if (loading) {
         return (
             <Container sx={{ display: "flex", justifyContent: "center", py: 8 }}>
@@ -102,7 +111,7 @@ const RoomDetailPage = () => {
                             {room.name}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                            {room.membersCount} member{room.membersCount !== 1 ? "s" : ""}
+                            {room.members?.length || 0} member{room.members?.length !== 1 ? "s" : ""}
                             {" • "}
                             Invite code: <strong>{room.inviteCode}</strong>
                         </Typography>
@@ -114,6 +123,12 @@ const RoomDetailPage = () => {
                         {error}
                     </Alert>
                 )}
+
+                <RoomSettingsComponent
+                    room={room}
+                    onSettingsUpdate={handleSettingsUpdate}
+                    onRoomDelete={handleRoomDelete}
+                />
 
                 <Tabs
                     value={tabValue}
