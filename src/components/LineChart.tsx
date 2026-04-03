@@ -24,6 +24,11 @@ interface MatchData {
 const data: MatchData[] = [
   { Match: "", Arvind: 0, Nirvikar: 0, Siddharth: 0 },
   { Match: "RCB vs SRH", Arvind: 10, Nirvikar: -10, Siddharth: -10 },
+  { Match: "MI vs KKR", Arvind: 10, Nirvikar: 10, Siddharth: -10 },
+  { Match: "RR vs CSK", Arvind: 10, Nirvikar: -10, Siddharth: -10 },
+  { Match: "PBKS vs GT", Arvind: -10, Nirvikar: 10, Siddharth: -10 },
+  { Match: "LSG vs DC", Arvind: -10, Nirvikar: 10, Siddharth: 10 },
+  { Match: "KKR vs SRH", Arvind: 10, Nirvikar: -10, Siddharth: 10 },
 ];
 
 const cumulativeData = data.map((match, index) => ({
