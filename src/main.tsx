@@ -6,7 +6,12 @@ import { ClerkProvider } from "@clerk/clerk-react";
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
 if (!PUBLISHABLE_KEY) {
-  throw new Error("Missing Publishable Key");
+  console.warn(
+    "⚠️  Missing Publishable Key - Get it from https://dashboard.clerk.com and add to .env.local"
+  );
+  throw new Error(
+    "Missing VITE_CLERK_PUBLISHABLE_KEY in .env.local file. Please visit https://dashboard.clerk.com to get your key."
+  );
 }
 
 createRoot(document.getElementById("root")!).render(

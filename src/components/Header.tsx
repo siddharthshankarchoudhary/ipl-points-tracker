@@ -71,6 +71,17 @@ export const Header = () => {
               </Button>
               <Button
                 component={RouterLink}
+                to="/rooms"
+                sx={{
+                  color: "#333",
+                  textTransform: "none",
+                  "&:hover": { backgroundColor: "rgba(0,0,0,0.05)" },
+                }}
+              >
+                Rooms
+              </Button>
+              <Button
+                component={RouterLink}
                 to="/profile"
                 sx={{
                   color: "#333",
